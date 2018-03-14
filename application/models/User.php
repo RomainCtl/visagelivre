@@ -6,7 +6,7 @@ class User extends CI_Model {
     }
     
     public function getUser($nickname, $pass){
-        $data = $this->getData(array('nickname' => $nickname, 'pass'=>$pass))
+        $data = $this->getData(array('nickname' => $nickname, 'pass'=>$pass));
         return $data;
     }
     

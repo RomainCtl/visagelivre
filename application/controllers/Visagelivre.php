@@ -27,6 +27,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function connect(){
+        $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
         
@@ -59,6 +60,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function inscription(){
+        $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
         
@@ -66,7 +68,7 @@ class Visagelivre extends CI_Controller {
         $data['baseurl'] = $this->getBaseUrl();
         
         $this->form_validation->set_rules('nickname', 'Identifiant', 'required');
-        $this->form_validation->set_rules('pass', 'Mot de passe', 'required');
+        $this->form_validation->set_rules('pass[]', 'Mot de passe', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
         
         if ($this->form_validation->run() === FALSE)
@@ -77,11 +79,12 @@ class Visagelivre extends CI_Controller {
             $email = $this->input->post('email');
             
             if ($pass[0] == $pass[1]){
-                $user = $this->User->newUser($nickname, $pass, $email);
+                $rep = $this->User->newUser($nickname, $pass[0], $email);
             
-                if ($user == null){
+                if ($rep == false){
                     $data['errormsg'] = "Echec de l'inscription";
                 } else {
+                    $user = $this->User->getUser($nickname, $pass[0]);
                     $_COOKIE['user'] = $user;
 
                     $data['user'] = $user;
