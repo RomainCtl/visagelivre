@@ -7,6 +7,21 @@ class Visagelivre extends CI_Controller {
         $this->load->model('User');
     }
     
+    public function getBaseUrl(){
+        if  (isset($_SERVER["HTTP_X_FORWARDED_HOST"])){
+            $baseurl = "http://".$_SERVER['HTTP_X_FORWARDED_HOST'];
+        }
+        else{
+            $baseurl = "http://".$_SERVER['HTTP_HOST'];
+        }
+
+        // insertion du chemin relatif
+        // montage sur /var/www/etuinfo/
+        $rel_path = str_replace('/var/www/etuinfo/', '',getcwd());
+        $baseurl .= '/'.$rel_path.'/';
+        return $baseurl;
+    }
+    
     public function index(){
         echo "yol";
     }
@@ -16,6 +31,7 @@ class Visagelivre extends CI_Controller {
         $this->load->library('form_validation');
         
         $data['title'] = 'Connection';
+        $data['baseurl'] = $this->getBaseUrl();
         
         $this->form_validation->set_rules('nickname', 'Identifiant', 'required');
         $this->form_validation->set_rules('pass', 'Mot de passe', 'required');
@@ -29,13 +45,50 @@ class Visagelivre extends CI_Controller {
             $user = $this->User->getUser($nickname, $pass);
             
             if ($user == null){
-                $data['title'] = 'Connection';
                 $data['errormsg'] = 'Echec de connection';
             } else {
                 $_COOKIE['user'] = $user;
                 
                 $data['user'] = $user;
                 $data['content'] = 'user';
+            }
+        }
+        
+        $this->load->vars($data);
+        $this->load->view('template');
+    }
+    
+    public function inscription(){
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        
+        $data['title'] = 'Inscription';
+        $data['baseurl'] = $this->getBaseUrl();
+        
+        $this->form_validation->set_rules('nickname', 'Identifiant', 'required');
+        $this->form_validation->set_rules('pass', 'Mot de passe', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        
+        if ($this->form_validation->run() === FALSE)
+            $data['content'] = 'inscription';
+        else {
+            $nickname = $this->input->post('nickname');
+            $pass = $this->input->post('pass');
+            $email = $this->input->post('email');
+            
+            if ($pass[0] == $pass[1]){
+                $user = $this->User->newUser($nickname, $pass, $email);
+            
+                if ($user == null){
+                    $data['errormsg'] = "Echec de l'inscription";
+                } else {
+                    $_COOKIE['user'] = $user;
+
+                    $data['user'] = $user;
+                    $data['content'] = 'user';
+                }
+            } else {
+                $data['errormsg'] = "Echec de l'inscription";
             }
         }
         

@@ -13,4 +13,4 @@ echo form_open('visagelivre/connect'); ?>
     <input type="submit" name="submit" value="Connection">
 
 </form>
-<a href="">Inscription</a>
+<a href="<?=$baseurl."/index.php/visagelivre/inscription" ?>">Inscription</a>
