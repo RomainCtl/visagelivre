@@ -31,5 +31,27 @@ class User extends CI_Model {
         $data = array('nickname' => $nickname);
         return $this->db->delete('_user', $data);
     }
+    
+    public function getAllUser(){
+        $query = $this->db->query("select nickname from fb1._user;");
+        return $query->result_array();
+    }
+    
+    public function getFriend($nickname){
+        $query = $this->db->query("select friend as ami, birth_date from fb1._friendof where nickname = '$nickname'
+                        UNION
+                        select nickname as ami, birth_date from fb1._friendof where friend = '$nickname';");
+        return $query->result_array();
+    }
+    
+    public function getTarget($nickname){
+        $query = $this->db->query("select target, request_date from fb1._friendrequest where requester  = '$nickname';");
+        return $query->result_array();
+    }
+    
+    public function getRequest($nickname){
+        $query = $this->db->query("select requester, request_date from fb1._friendrequest where target  = '$nickname';");
+        return $query->result_array();
+    }
 }
 ?>

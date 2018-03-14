@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
         <title><?php echo $title; ?> - Visage Livre </title>
+        <style rel="text/css">
+            .billet{
+                border:1px black solid;
+                margin:5px 0;
+                padding:5px;
+            }
+        </style>
     </head>
     <body>
         <div id="global">
@@ -13,7 +20,7 @@
                 <?php $this->load->view($content); ?>
             </div>
             <div id="pied">
-                <strong>&copy; 2016</strong>
+                <strong>&copy; 2018</strong>
             </div>
         </div>
     </body>

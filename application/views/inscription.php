@@ -3,6 +3,8 @@
 <?php 
 echo validation_errors();
 
+if (isset($errormsg)) echo $errormsg;
+
 echo form_open('visagelivre/inscription'); ?>
 
     <label for="title">Identifiant</label>
@@ -17,4 +19,4 @@ echo form_open('visagelivre/inscription'); ?>
     <input type="submit" name="submit" value="Connection">
 
 </form>
-<a href="<?=$baseurl."/index.php/visagelivre/connect" ?>">Connection</a>
+<a href="<?=$baseurl."index.php/visagelivre/connect" ?>">Connexion</a>

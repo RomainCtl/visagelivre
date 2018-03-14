@@ -1,7 +1,9 @@
-<h2>Connection</h2>
+<h2>Connexion</h2>
 
 <?php 
 echo validation_errors();
+
+if (isset($errormsg)) echo $errormsg;
 
 echo form_open('visagelivre/connect'); ?>
 
@@ -13,4 +15,4 @@ echo form_open('visagelivre/connect'); ?>
     <input type="submit" name="submit" value="Connection">
 
 </form>
-<a href="<?=$baseurl."/index.php/visagelivre/inscription" ?>">Inscription</a>
+<a href="<?=$baseurl."index.php/visagelivre/inscription" ?>">Inscription</a>
