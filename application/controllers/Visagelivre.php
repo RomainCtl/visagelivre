@@ -45,6 +45,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function post($pid){
+        session_start();
         $this->load->helper('form'); 
         if (isset($pid)){
             $this->load->model("billet");
@@ -255,7 +256,7 @@ class Visagelivre extends CI_Controller {
         
     }
     
-    public function ajoutBillet($sup,$cur){
+    public function ajoutBillet($sup,$cur=null){
         if(!$this->isConnected()){
             header("Location:".$this->getBaseUrl());
         }
@@ -267,7 +268,29 @@ class Visagelivre extends CI_Controller {
         
         $this->billet->addBillet($_SESSION['user']['nickname'],$content,$sup);
         
-        if(isset($cur)){
+        if($cur!=null){
+            header("Location:".$this->getBaseUrl()."index.php/visagelivre/post/$cur");
+        }else{
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function supprimer($idBillet,$cur=null){
+        if(!$this->isConnected()){
+            header("Location:".$this->getBaseUrl());
+        }
+        $this->load->model("billet");
+        $billet=$this->billet->getPost($idBillet);
+        if($billet==null){
+            $billet=$this->billet->getCommentaire($idBillet);
+        }
+        
+        if($billet['auteur']!=$_SESSION['user']['nickname']){
+            header("Location:".$this->getBaseUrl());
+        } 
+        $this->billet->delBillet($idBillet);
+         
+        if($cur!=null){
             header("Location:".$this->getBaseUrl()."index.php/visagelivre/post/$cur");
         }else{
             header("Location:".$this->getBaseUrl());

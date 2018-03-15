@@ -30,6 +30,11 @@ if(isset($_SESSION['user'])){//est connecté?>
     <div class="billet">
         <?=$pauteur?><br/>
         <?=$pdate?><br/>
+        <?php
+        if(isset($_SESSION['user']) && $pauteur==$_SESSION['user']['nickname']){//mon commentaire ?>
+       <a href='<?= $baseurl."index.php/visagelivre/supprimer/$pid"?>'>Supprimer le billet</a> 
+<?php
+    }?>
         <hr/>
         <?=$pcontent?>
         <a href="<?=$baseurl."index.php/visagelivre/post/$pid"?>">[Afficher les réponses]</a>
