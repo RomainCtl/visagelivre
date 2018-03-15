@@ -64,7 +64,7 @@ class Visagelivre extends CI_Controller {
         $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $this->load->library('session');
+        session_start();
         
         $data['title'] = 'Connexion';
         $data['baseurl'] = $this->getBaseUrl();
@@ -99,7 +99,7 @@ class Visagelivre extends CI_Controller {
         $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $this->load->library('session');
+        session_start();
         
         $data['title'] = 'Inscription';
         $data['baseurl'] = $this->getBaseUrl();
@@ -140,7 +140,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function user(){
-        $this->load->library('session');
+        session_start();
         
         if (isset($_SESSION['user'])){
             $this->load->model('User');
