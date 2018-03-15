@@ -19,6 +19,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function index(){
+        session_start();
         $this->load->model("billet");
         
         $posts=$this->billet->listBilletsBySup();
@@ -171,6 +172,29 @@ class Visagelivre extends CI_Controller {
     }
     
     public function delFriend($nickname, $friend){
+        
+    }
+    
+    public function disconnect(){
+        session_start();
+        session_destroy();
+        header("Location:".$this->getBaseUrl());
+    }
+    
+    public function postamis(){
+        session_start();
+        $this->load->model("billet");
+        
+        $posts=$this->billet->listPostsByFriends($_SESSION['USER']['nickname']);
+        $base_url=$this->getBaseUrl();
+        
+        $data['title'] = 'Accueil';
+        $data['baseurl'] = $this->getBaseUrl();
+        $data['content'] = 'accueil';
+        $data['posts'] = $posts;
+        
+        $this->load->vars($data);
+        $this->load->view('template');
         
     }
 }

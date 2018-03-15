@@ -39,4 +39,9 @@ class Billet extends CI_Model {
         $query = $this->db->query('select * from fb1.post where iddoc='.$id.';');
         return $query->result_array()[0];
     }
+    
+    public function listPostsByFriends($nickname){
+        $query = $this->db->query('select p.* from amis('$nickname') a inner join post p on a.ami=p.auteur');
+        return $query->result_array()[0];
+    }
 }

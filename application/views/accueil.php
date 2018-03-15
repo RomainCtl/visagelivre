@@ -1,9 +1,16 @@
-<h2>Accueil</h2><?php
-session_start();
-var_dump($_SESSION);die(); ?>
+<h2>Accueil</h2>
+<?php
+if(isset($_SESSION['user'])){//est connecté?>
+
+<a href="<?=$baseurl."index.php/visagelivre/disconnect" ?>">Déconnexion</a>
+<a href="<?=$baseurl."index.php/visagelivre/user" ?>">Profil</a>
+<a href="<?=$baseurl."index.php/visagelivre/postsamis" ?>">Posts des amis uniquement</a>
+
+<?php }else{//est déconnecté ?>
+
 <a href="<?=$baseurl."index.php/visagelivre/inscription" ?>">Inscription</a>
 <a href="<?=$baseurl."index.php/visagelivre/connect" ?>">Connexion</a>
-<a href="<?=$baseurl."index.php/visagelivre/user" ?>">Page Utilisateur</a>
+<?php } ?> 
  
 <?php
     foreach($posts as $post){
