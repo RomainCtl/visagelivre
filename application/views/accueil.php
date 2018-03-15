@@ -1,8 +1,10 @@
-<h2>Accueil</h2>
-
+<h2>Accueil</h2><?php
+session_start();
+var_dump($_SESSION);die(); ?>
 <a href="<?=$baseurl."index.php/visagelivre/inscription" ?>">Inscription</a>
 <a href="<?=$baseurl."index.php/visagelivre/connect" ?>">Connexion</a>
-
+<a href="<?=$baseurl."index.php/visagelivre/user" ?>">Page Utilisateur</a>
+ 
 <?php
     foreach($posts as $post){
         $pcontent=$post['content'];
