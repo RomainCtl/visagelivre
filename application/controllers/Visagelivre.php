@@ -62,10 +62,11 @@ class Visagelivre extends CI_Controller {
     }
     
     public function connect(){
+        if ($this->isConnected()) header("Location:".$this->getBaseUrl());
+        
         $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        session_start();
         
         $data['title'] = 'Connexion';
         $data['baseurl'] = $this->getBaseUrl();
@@ -97,10 +98,11 @@ class Visagelivre extends CI_Controller {
     }
     
     public function inscription(){
+        if ($this->isConnected()) header("Location:".$this->getBaseUrl());
+        
         $this->load->model('User');
         $this->load->helper('form');
         $this->load->library('form_validation');
-        session_start();
         
         $data['title'] = 'Inscription';
         $data['baseurl'] = $this->getBaseUrl();
@@ -171,8 +173,30 @@ class Visagelivre extends CI_Controller {
         }
     }
     
+    private function isConnected(){
+        session_start();
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            $user = json_decode($_SESSION['user'], true);
+            $user = $this->User->getUser($user['nickname'], $user['pass']);
+            
+            return ($user != null);
+        } else {
+            return false;
+        }
+    }
+    
     public function delFriend($nickname, $friend){
+        session_start();
         
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            
+        } else {
+            header("Location:".$this->getBaseUrl());
+        }
     }
     
     public function disconnect(){
