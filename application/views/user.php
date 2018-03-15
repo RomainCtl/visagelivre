@@ -1,3 +1,4 @@
+<a href="<?=$baseurl?>">Retour a la liste des posts</a>
 <div>
     <h3><?=$user['nickname'] ?></h3>
     <p><?=$user['email'] ?></p>
