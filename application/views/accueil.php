@@ -3,9 +3,11 @@
 if(isset($_SESSION['user'])){//est connecté?>
     <a href="<?=$baseurl."index.php/visagelivre/disconnect" ?>">Déconnexion</a>
     <a href="<?=$baseurl."index.php/visagelivre/user" ?>">Profil</a>
+
     <?php if(isset($amisUniq)&&$amisUniq){//Si on est sur les posts des amis uniquements ?>
         <a href="<?=$baseurl ?>">Retour à tous les posts</a>
     <?php }else{ ?>
+        <a href="<?=$baseurl."index.php/visagelivre/mesposts" ?>">Mes posts</a>
         <a href="<?=$baseurl."index.php/visagelivre/postsamis" ?>">Posts des amis uniquement</a>
 <?php } ?>
 <div style='margin:5px 0;'>

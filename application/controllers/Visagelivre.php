@@ -270,6 +270,26 @@ class Visagelivre extends CI_Controller {
             header("Location:".$this->getBaseUrl());
         }
     }
+    
+    public function mesposts(){
+        if(!$this->isConnected()){
+            header("Location:".$this->getBaseUrl());
+        }
+        $this->load->helper('form'); 
+        $this->load->model("billet");
+        
+        $posts=$this->billet->listPostsByUser($_SESSION['user']['nickname']);
+        $base_url=$this->getBaseUrl();
+        
+        $data['title'] = 'Accueil';
+        $data['baseurl'] = $this->getBaseUrl();
+        $data['content'] = 'accueil';
+        $data['posts'] = $posts;
+        $data['amisUniq'] = true;
+        
+        $this->load->vars($data);
+        $this->load->view('template');
+    }
 }
 
 ?>
