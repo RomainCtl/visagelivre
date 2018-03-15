@@ -53,5 +53,10 @@ class User extends CI_Model {
         $query = $this->db->query("select requester, request_date from fb1._friendrequest where target  = '$nickname';");
         return $query->result_array();
     }
+    
+    public function requestfriend($nickname, $friend){
+        $data = array('requester' => $nickname, 'target' => $friend);
+        return $this->db->insert('_friendrequest', $data);
+    }
 }
 ?>

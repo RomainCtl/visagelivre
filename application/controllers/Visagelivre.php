@@ -146,8 +146,8 @@ class Visagelivre extends CI_Controller {
         $this->load->view('template');
     }
     
-    public function user(){
-        session_start();
+    public function user($err = null){
+        if ($err == null) session_start();
         
         if (isset($_SESSION['user'])){
             $this->load->model('User');
@@ -162,12 +162,15 @@ class Visagelivre extends CI_Controller {
                 $data['title'] = 'User';
                 $data['baseurl'] = $this->getBaseUrl();
                 $data['content'] = 'user';
+                $data['error'] = $err;
                 
                 $data['user'] = $user;
                 $data['friend'] = $this->User->getFriend($user['nickname']);
-                $data['otheruser'] = $this->User->getAllUser($user['nickname']);
-                $data['friendRequest'] = $this->User->getRequest($user['nickname']);
-                $data['friendTarget'] = $this->User->getTarget($user['nickname']);
+                var_dump($this->User->getAllUser($user['nickname']));echo "<br/>";
+                $data['otheruser'] = $this->cleanArray($this->User->getAllUser($user['nickname']), $data['friend'], 'nickname', 'ami');
+                var_dump($data['otheruser']);
+                $data['friendRequest'] = $this->cleanArray($this->User->getRequest($user['nickname']), $data['friend'], 'requester', 'ami');
+                $data['friendTarget'] = $this->cleanArray($this->User->getTarget($user['nickname']), $data['friend'], 'target', 'ami');
                 
                 $this->load->vars($data);
                 $this->load->view('template');
@@ -177,9 +180,26 @@ class Visagelivre extends CI_Controller {
         }
     }
     
+    private function cleanArray($arr1, $arr2, $str1, $str2){
+        $tmp = array();
+        for ($i = 0 ; $i < count($arr1) ; $i++){
+            foreach ($arr2 as $u){
+                if ($u[$str2] == $arr1[$i][$str1]) {
+                    $tmp[$i] = $arr1[$i];
+                }
+            }
+        }
+        if (!function_exists('udiffCompare')){
+            function udiffCompare($a, $b){
+                return $a != $b;
+            }
+        }
+        return array_udiff($arr1, $tmp, 'udiffCompare');
+    }
+    
     private function isConnected(){
         session_start();
-        if (isset($_SESSION['user'])){
+        if (isset($_SESSION['user']) && isset($_SESSION['user']['nickname']) && isset($_SESSION['user']['pass'])){
             $this->load->model('User');
             
             $user = $_SESSION['user'];
@@ -191,13 +211,19 @@ class Visagelivre extends CI_Controller {
         }
     }
     
-    public function delFriend($nickname, $friend){
+    public function requestUser($nickname, $friend){
         session_start();
         
         if (isset($_SESSION['user'])){
             $this->load->model('User');
             
-            
+            $rep = $this->User->requestfriend($nickname, $friend);
+            echo "rep : ".$rep;
+            if ($rep){
+                $this->user();
+            } else {
+                $this-user($rep);
+            }
         } else {
             header("Location:".$this->getBaseUrl());
         }
