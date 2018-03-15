@@ -3,6 +3,7 @@
     <h3><?=$user['nickname'] ?></h3>
     <p><?=$user['email'] ?></p>
     <div>
+        <?php if (isset($error)) echo "<p style='color:red'>$error</p>"; ?>
         <h4>Amis</h4>
         <ul id="friends">
             <?php
@@ -44,7 +45,8 @@
             <?php
             if (!empty($otheruser)){
                 foreach($otheruser as $f){
-                    echo "<li>".$f['nickname']."</li>";
+                    if ($user['nickname'] != $f['nickname'])
+                        echo "<li>".$f['nickname']." <a href='".$baseurl."index.php/visagelivre/requestUser/".$user['nickname']."/".$f['nickname']."'>[Demander en amis]</a></li>";
                 }
             } else {
                 echo "<i>- Aucune -</i>";
