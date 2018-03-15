@@ -3,13 +3,8 @@
     <head>
         <meta charset="utf-8" />
         <title><?php echo $title; ?> - Visage Livre </title>
-        <style rel="text/css">
-            .billet{
-                border:1px black solid;
-                margin:5px 0;
-                padding:5px;
-            }
-        </style>
+        <link href="<?= $baseurl."assets/css/style.css" ?>" rel="stylesheet" />
+        
     </head>
     <body>
         <div id="global">

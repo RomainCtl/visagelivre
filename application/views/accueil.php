@@ -1,4 +1,3 @@
-<h2>Accueil</h2>
 <?php 
 if(isset($_SESSION['user'])){//est connecté?>
     <a href="<?=$baseurl."index.php/visagelivre/disconnect" ?>">Déconnexion</a>
