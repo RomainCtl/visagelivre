@@ -26,9 +26,9 @@ class Billet extends CI_Model {
     }
     
     public function delBillet($id){
-        $this->db->query("delete * from _post where iddoc=$id");
-        $this->db->query("delete * from _comment where iddoc=$id");
-        $this->db->query("delete * from _document where iddoc=$id");
+        $this->db->query("delete from fb1._post where iddoc=$id");
+        $this->db->query("delete from fb1._comment where iddoc=$id");
+        $this->db->query("delete from fb1._document where iddoc=$id");
     }
     
     public function getRelCom($pid){
@@ -38,11 +38,26 @@ class Billet extends CI_Model {
     
     public function getPost($id){
         $query = $this->db->query('select * from fb1.post where iddoc='.$id.';');
-        return $query->result_array()[0];
+        $a=$query->result_array();
+        if($a){
+            return $a[0];
+        }else{
+            return null;
+        }
     }
     
     public function listPostsByFriends($nickname){
         $query = $this->db->query("select p.* from fb1.amis('$nickname') a inner join fb1.post p on a.ami=p.auteur");
         return $query->result_array();
+    }
+    
+    public function getCommentaire($id){
+        $query = $this->db->query('select * from fb1.comment where iddoc='.$id.';');
+        $a=$query->result_array();
+        if($a){
+            return $a[0];
+        }else{
+            return null;
+        }
     }
 }
