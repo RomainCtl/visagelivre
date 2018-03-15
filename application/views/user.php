@@ -1,4 +1,5 @@
 <a href="<?=$baseurl?>">Retour a la liste des posts</a>
+<a href="<?=$baseurl."index.php/visagelivre/deleteMe/".$user['nickname']?>">Supprimer mon compte</a>
 <div>
     <h3><?=$user['nickname'] ?></h3>
     <p><?=$user['email'] ?></p>
@@ -9,7 +10,7 @@
             <?php
             if (!empty($friend)){
                 foreach($friend as $f){
-                    echo "<li>".$f['ami']." <i>(depuis : ".$f['birth_date'].")</i></li>";
+                    echo "<li>".$f['ami']." <i>(depuis : ".$f['birth_date'].")</i><a href='".$baseurl."index.php/visagelivre/deleteFriend/".$user['nickname']."/".$f['ami']."'>[Supprimer]</a></li>";
                 }
             } else {
                 echo "<i>- Aucun -</i>";
@@ -21,7 +22,7 @@
             <?php
             if (!empty($friendRequest)){
                 foreach($friendRequest as $f){
-                    echo "<li>".$f['requester']." - ".$f['request_date']."</li>";
+                    echo "<li>".$f['target']." - ".$f['request_date']." <a href='".$baseurl."index.php/visagelivre/deleteRequest/".$user['nickname']."/".$f['target']."'>[Supprimer]</a></li>";
                 }
             } else {
                 echo "<i>- Aucune -</i>";
@@ -33,7 +34,7 @@
             <?php
             if (!empty($friendTarget)){
                 foreach($friendTarget as $f){
-                    echo "<li>".$f['target']." - ".$f['request_date']."</li>";
+                    echo "<li>".$f['requester']." - ".$f['request_date']." <a href='".$baseurl."index.php/visagelivre/acceptRequest/".$user['nickname']."/".$f['requester']."'>[Accepter]</a><a href='".$baseurl."index.php/visagelivre/deleteRequest/".$user['nickname']."/".$f['requester']."'>[Refuser]</a></li>";
                 }
             } else {
                 echo "<i>- Aucune -</i>";

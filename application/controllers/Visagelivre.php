@@ -147,7 +147,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function user($err = null){
-        if ($err == null) session_start();
+        if (session_status() == PHP_SESSION_NONE) session_start();
         
         if (isset($_SESSION['user'])){
             $this->load->model('User');
@@ -166,11 +166,12 @@ class Visagelivre extends CI_Controller {
                 
                 $data['user'] = $user;
                 $data['friend'] = $this->User->getFriend($user['nickname']);
-                var_dump($this->User->getAllUser($user['nickname']));echo "<br/>";
-                $data['otheruser'] = $this->cleanArray($this->User->getAllUser($user['nickname']), $data['friend'], 'nickname', 'ami');
-                var_dump($data['otheruser']);
-                $data['friendRequest'] = $this->cleanArray($this->User->getRequest($user['nickname']), $data['friend'], 'requester', 'ami');
-                $data['friendTarget'] = $this->cleanArray($this->User->getTarget($user['nickname']), $data['friend'], 'target', 'ami');
+                $data['otheruser'] = $this->cleanArray($this->User->getOtherUser($user['nickname']), $data['friend'], 'nickname', 'ami');
+                //$data['friendRequest'] = $this->cleanArray($this->User->getRequest($user['nickname']), $data['friend'], 'requester', 'ami');
+                //$data['friendTarget'] = $this->cleanArray($this->User->getTarget($user['nickname']), $data['friend'], 'target', 'ami');
+                
+                $data['friendRequest'] = $this->User->getRequest($user['nickname']);
+                $data['friendTarget'] = $this->User->getTarget($user['nickname']);
                 
                 $this->load->vars($data);
                 $this->load->view('template');
@@ -217,12 +218,79 @@ class Visagelivre extends CI_Controller {
         if (isset($_SESSION['user'])){
             $this->load->model('User');
             
-            $rep = $this->User->requestfriend($nickname, $friend);
-            echo "rep : ".$rep;
+            $rep = $this->User->requestfriend(urldecode($nickname), urldecode($friend));
             if ($rep){
                 $this->user();
             } else {
-                $this-user($rep);
+                $this->user($rep);
+            }
+        } else {
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function acceptRequest($nickname, $friend) {
+        session_start();
+        
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            $rep = $this->User->acceptfriend(urldecode($nickname), urldecode($friend));
+            if ($rep){
+                $this->user();
+            } else {
+                $this->user($rep);
+            }
+        } else {
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function deleteRequest($nickname, $friend){
+        session_start();
+        
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            $rep = $this->User->deleteRequest(urldecode($nickname), urldecode($friend));
+            if ($rep){
+                $this->user();
+            } else {
+                $this->user($rep);
+            }
+        } else {
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function deleteMe($nickname){
+        session_start();
+        
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            $rep = $this->User->delUser(urldecode($nickname));
+            if ($rep){
+                $this->user();
+            } else {
+                $this->user($rep);
+            }
+        } else {
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function deleteFriend($nickname, $friend){
+        session_start();
+        
+        if (isset($_SESSION['user'])){
+            $this->load->model('User');
+            
+            $rep = $this->User->deleteFriend(urldecode($nickname), urldecode($friend));
+            if ($rep){
+                $this->user();
+            } else {
+                $this->user($rep);
             }
         } else {
             header("Location:".$this->getBaseUrl());
