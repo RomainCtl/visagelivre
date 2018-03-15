@@ -13,11 +13,12 @@ class Billet extends CI_Model {
         return $query->result_array();
     }
     
-    public function addBillet($content,$nickname,$sup=null){
-        $date=new Date('now');
+    public function addBillet($auteur,$content,$sup=null){
+        $date=new DateTime('now');
+        $date=$date->format('d-m-Y H:i:s');
         $data = ['content'=>$content, 'auteur'=>$auteur, 'create_date'=>$date];
         if($sup!=null){//commentaire
-            $datas['sup']=$sup;
+            $data['sup']=$sup;
             return $this->db->insert('comment', $data);
         }else{
             return $this->db->insert('post', $data);
@@ -41,7 +42,7 @@ class Billet extends CI_Model {
     }
     
     public function listPostsByFriends($nickname){
-        $query = $this->db->query('select p.* from amis('$nickname') a inner join post p on a.ami=p.auteur');
-        return $query->result_array()[0];
+        $query = $this->db->query("select p.* from fb1.amis('$nickname') a inner join fb1.post p on a.ami=p.auteur");
+        return $query->result_array();
     }
 }
