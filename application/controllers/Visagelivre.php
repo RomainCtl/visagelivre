@@ -20,6 +20,7 @@ class Visagelivre extends CI_Controller {
     
     public function index(){
         session_start();
+        $this->load->helper('form'); 
         $this->load->model("billet");
         
         $posts=$this->billet->listBilletsBySup();
@@ -44,6 +45,7 @@ class Visagelivre extends CI_Controller {
     }
     
     public function post($pid){
+        $this->load->helper('form'); 
         if (isset($pid)){
             $this->load->model("billet");
             $post=$this->billet->getPost($pid);
@@ -53,6 +55,7 @@ class Visagelivre extends CI_Controller {
             $data['baseurl'] = $this->getBaseUrl();
             $data['content'] = 'post';
             $data['commentaires'] = $commentaires;
+            $data['cur'] = $pid;
 
             $this->load->vars($data);
             $this->load->view('template');
@@ -148,7 +151,8 @@ class Visagelivre extends CI_Controller {
         if (isset($_SESSION['user'])){
             $this->load->model('User');
             
-            $user = $this->User->getUser($_SESSION['user']['nickname'], $_SESSION['user']['pass']);
+            $user = $_SESSION['user'];
+            $user = $this->User->getUser($user['nickname'], $user['pass']);
             
             if ($user == null){
                 header("Location:".$this->getBaseUrl());
@@ -197,7 +201,8 @@ class Visagelivre extends CI_Controller {
         if (isset($_SESSION['user']) && isset($_SESSION['user']['nickname']) && isset($_SESSION['user']['pass'])){
             $this->load->model('User');
             
-            $user = $this->User->getUser($_SESSION['user']['nickname'], $_SESSION['user']['pass']);
+            $user = $_SESSION['user'];
+            $user = $this->User->getUser($user['nickname'], $user['pass']);
             
             return ($user != null);
         } else {
@@ -219,6 +224,52 @@ class Visagelivre extends CI_Controller {
                 $this-user($rep);
             }
         } else {
+            header("Location:".$this->getBaseUrl());
+        }
+    }
+    
+    public function disconnect(){
+        session_start();
+        session_destroy();
+        header("Location:".$this->getBaseUrl());
+    }
+    
+    public function postsamis(){
+        if(!$this->isConnected()){
+            header("Location:".$this->getBaseUrl());
+        }
+        $this->load->helper('form'); 
+        $this->load->model("billet");
+        
+        $posts=$this->billet->listPostsByFriends($_SESSION['user']['nickname']);
+        $base_url=$this->getBaseUrl();
+        
+        $data['title'] = 'Accueil';
+        $data['baseurl'] = $this->getBaseUrl();
+        $data['content'] = 'accueil';
+        $data['posts'] = $posts;
+        $data['amisUniq'] = true;
+        
+        $this->load->vars($data);
+        $this->load->view('template');
+        
+    }
+    
+    public function ajoutBillet($sup,$cur){
+        if(!$this->isConnected()){
+            header("Location:".$this->getBaseUrl());
+        }
+        $content=$this->input->post('content');
+        if($sup==-1){
+            $sup=null;
+        }
+        $this->load->model("billet");
+        
+        $this->billet->addBillet($_SESSION['user']['nickname'],$content,$sup);
+        
+        if(isset($cur)){
+            header("Location:".$this->getBaseUrl()."index.php/visagelivre/post/$cur");
+        }else{
             header("Location:".$this->getBaseUrl());
         }
     }
