@@ -19,7 +19,9 @@ class Visagelivre extends CI_Controller {
     }
     
     public function index(){
-        session_start();
+        if ($this->isConnected()) $this->postsamis();
+        else $this->connect();
+        /*session_start();
         $this->load->helper('form'); 
         $this->load->model("billet");
         
@@ -32,7 +34,7 @@ class Visagelivre extends CI_Controller {
         $data['posts'] = $posts;
         
         $this->load->vars($data);
-        $this->load->view('template');
+        $this->load->view('template');*/
     }
     
     private function setCommentaires($document){
@@ -50,6 +52,8 @@ class Visagelivre extends CI_Controller {
         if (isset($pid)){
             $this->load->model("billet");
             $post=$this->billet->getPost($pid);
+            if (!$post) header("Location:".$this->getBaseUrl());
+            
             $commentaires=$this->setCommentaires($post);
             
             $data['title'] = 'Post';
@@ -159,7 +163,7 @@ class Visagelivre extends CI_Controller {
                 header("Location:".$this->getBaseUrl());
             } else {
                 $user = $user[0];
-                $data['title'] = 'User';
+                $data['title'] = 'Profil';
                 $data['baseurl'] = $this->getBaseUrl();
                 $data['content'] = 'user';
                 $data['error'] = $err;
@@ -199,7 +203,7 @@ class Visagelivre extends CI_Controller {
     }
     
     private function isConnected(){
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) session_start();
         if (isset($_SESSION['user']) && isset($_SESSION['user']['nickname']) && isset($_SESSION['user']['pass'])){
             $this->load->model('User');
             
@@ -271,7 +275,7 @@ class Visagelivre extends CI_Controller {
             
             $rep = $this->User->delUser(urldecode($nickname));
             if ($rep){
-                $this->user();
+                $this->disconnect();
             } else {
                 $this->user($rep);
             }
@@ -313,7 +317,7 @@ class Visagelivre extends CI_Controller {
         $posts=$this->billet->listPostsByFriends($_SESSION['user']['nickname']);
         $base_url=$this->getBaseUrl();
         
-        $data['title'] = 'Accueil';
+        $data['title'] = "File d'actualité";
         $data['baseurl'] = $this->getBaseUrl();
         $data['content'] = 'accueil';
         $data['posts'] = $posts;
@@ -329,6 +333,9 @@ class Visagelivre extends CI_Controller {
             header("Location:".$this->getBaseUrl());
         }
         $content=$this->input->post('content');
+        if (strlen($content) > 128) {
+            header("Location:".$this->getBaseUrl());
+        }
         if($sup==-1){
             $sup=null;
         }
@@ -375,11 +382,10 @@ class Visagelivre extends CI_Controller {
         $posts=$this->billet->listPostsByUser($_SESSION['user']['nickname']);
         $base_url=$this->getBaseUrl();
         
-        $data['title'] = 'Accueil';
+        $data['title'] = 'Mes Posts';
         $data['baseurl'] = $this->getBaseUrl();
         $data['content'] = 'accueil';
         $data['posts'] = $posts;
-        $data['amisUniq'] = true;
         
         $this->load->vars($data);
         $this->load->view('template');
