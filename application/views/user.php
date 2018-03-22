@@ -4,7 +4,7 @@
         <p><?=$user['email'] ?></p>
         <div class="btnGroup">
             <a class="normal" href="<?=$baseurl?>">Retour a la liste des posts</a>
-            <a class="dangerous" href="<?=$baseurl."index.php/visagelivre/deleteMe/".$user['nickname']?>">Supprimer mon compte</a>
+            <a class="dangerous confirmation" href="<?=$baseurl."index.php/visagelivre/deleteMe/".$user['nickname']?>" >Supprimer mon compte</a>
         </div>
     </div>
     <div id="user">

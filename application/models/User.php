@@ -33,7 +33,7 @@ class User extends CI_Model {
     }
     
     public function getOtherUser($nickname){
-        $query = $this->db->query("select nickname from fb1._user except select ami as nickname from fb1.amis('$nickname');");
+        $query = $this->db->query("Select nickname from fb1._user except (select ami as nickname from fb1.amis('$nickname') Union select requester as nickname from fb1._friendrequest where target = '$nickname' Union select target as nickname from fb1._friendrequest where requester = '$nickname' Union select nickname from fb1._user where nickname = '$nickname');");
         return $query->result_array();
     }
     

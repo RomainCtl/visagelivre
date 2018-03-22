@@ -47,7 +47,7 @@ class Billet extends CI_Model {
     }
     
     public function listPostsByFriends($nickname){
-        $query = $this->db->query("select p.* from fb1.amis('$nickname') a inner join fb1.post p on a.ami=p.auteur");
+        $query = $this->db->query("(select p.* from fb1.amis('$nickname') a inner join fb1.post p on a.ami=p.auteur Union Select * from fb1.post where auteur = '$nickname')  order by create_date DESC");
         return $query->result_array();
     }
     public function listPostsByUser($nickname){

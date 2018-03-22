@@ -149,12 +149,12 @@ body{
 }
 
 .normal {
-    background-color: #13a1fa;
-    box-shadow: 5px 5px 5px #4bbaff;
+    background-color: #63AD86;
+    box-shadow: 5px 5px 5px #63AD86;
 }
 
 .normal:hover {
-    background-color: #23aaff;
+    background-color: #65bc8e;
 }
 
 .dangerous {

@@ -21,20 +21,6 @@ class Visagelivre extends CI_Controller {
     public function index(){
         if ($this->isConnected()) $this->postsamis();
         else $this->connect();
-        /*session_start();
-        $this->load->helper('form'); 
-        $this->load->model("billet");
-        
-        $posts=$this->billet->listBilletsBySup();
-        $base_url=$this->getBaseUrl();
-        
-        $data['title'] = 'Accueil';
-        $data['baseurl'] = $this->getBaseUrl();
-        $data['content'] = 'accueil';
-        $data['posts'] = $posts;
-        
-        $this->load->vars($data);
-        $this->load->view('template');*/
     }
     
     private function setCommentaires($document){
@@ -86,7 +72,7 @@ class Visagelivre extends CI_Controller {
             $data['content'] = 'connection';
         else {
             $nickname = $this->input->post('nickname');
-            $pass = $this->input->post('pass');
+            $pass = hash('sha256', $this->input->post('pass'));
             
             $user = $this->User->getUser($nickname, $pass);
             
@@ -127,7 +113,7 @@ class Visagelivre extends CI_Controller {
             $email = $this->input->post('email');
             
             if ($pass[0] == $pass[1]){
-                $rep = $this->User->newUser($nickname, $pass[0], $email);
+                $rep = $this->User->newUser($nickname, hash('sha256', $pass[0]), $email);
             
                 if ($rep == false){
                     $data['errormsg'] = "Echec de l'inscription";
@@ -169,13 +155,13 @@ class Visagelivre extends CI_Controller {
                 $data['error'] = $err;
                 
                 $data['user'] = $user;
-                $data['friend'] = $this->User->getFriend($user['nickname']);
-                $data['otheruser'] = $this->cleanArray($this->User->getOtherUser($user['nickname']), $data['friend'], 'nickname', 'ami');
-                //$data['friendRequest'] = $this->cleanArray($this->User->getRequest($user['nickname']), $data['friend'], 'requester', 'ami');
-                //$data['friendTarget'] = $this->cleanArray($this->User->getTarget($user['nickname']), $data['friend'], 'target', 'ami');
-                
+                $data['friend'] = $this->User->getFriend($user['nickname']);                
                 $data['friendRequest'] = $this->User->getRequest($user['nickname']);
                 $data['friendTarget'] = $this->User->getTarget($user['nickname']);
+                
+                $data['otheruser'] = $this->cleanArray($this->User->getOtherUser($user['nickname']), $data['friend'], 'nickname', 'ami');
+                $data['otheruser'] = $this->cleanArray($data['otheruser'], $data['friendRequest'], 'nickname', 'target');
+                $data['otheruser'] = $this->cleanArray($data['otheruser'], $data['friendTarget'], 'nickname', 'requester');
                 
                 $this->load->vars($data);
                 $this->load->view('template');
@@ -317,11 +303,10 @@ class Visagelivre extends CI_Controller {
         $posts=$this->billet->listPostsByFriends($_SESSION['user']['nickname']);
         $base_url=$this->getBaseUrl();
         
-        $data['title'] = "File d'actualité";
+        $data['title'] = "Fil d'actualité";
         $data['baseurl'] = $this->getBaseUrl();
         $data['content'] = 'accueil';
         $data['posts'] = $posts;
-        $data['amisUniq'] = true;
         
         $this->load->vars($data);
         $this->load->view('template');

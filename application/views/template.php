@@ -32,4 +32,5 @@
             </div>
         </div>
     </body>
+    <script src="<?= $baseurl."assets/js/confirm.js" ?>"></script>
 </html>
